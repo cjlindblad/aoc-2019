@@ -1,9 +1,31 @@
 import { parseNumbers } from "../utils/inputParsing";
 
-export const calculateFuelNeed = (mass: number) => Math.floor(mass / 3) - 2;
+interface FuelNeedCalculator {
+  (mass: number): number;
+}
 
-export const fuelCounterUpper = (masses: number[]) =>
-  masses.reduce((prev, curr) => prev + calculateFuelNeed(curr), 0);
+export const calculateFuelNeed: FuelNeedCalculator = (mass: number) =>
+  Math.floor(mass / 3) - 2;
+
+export const calculateRecursiveFuelNeed: FuelNeedCalculator = (
+  mass: number
+) => {
+  const fuelNeed = calculateFuelNeed(mass);
+
+  if (fuelNeed <= 0) {
+    return 0;
+  }
+
+  return fuelNeed + calculateRecursiveFuelNeed(fuelNeed);
+};
+
+export const fuelCounterUpper = (
+  masses: number[],
+  fuelNeedCalculator: FuelNeedCalculator
+) => masses.reduce((prev, curr) => prev + fuelNeedCalculator(curr), 0);
 
 export const partOneSolver = (input: string) =>
-  fuelCounterUpper(parseNumbers(input));
+  fuelCounterUpper(parseNumbers(input), calculateFuelNeed);
+
+export const partTwoSolver = (input: string) =>
+  fuelCounterUpper(parseNumbers(input), calculateRecursiveFuelNeed);
