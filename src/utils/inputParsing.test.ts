@@ -12,4 +12,12 @@ describe("input parsing", () => {
 
     expect(result).toEqual([1, 2, 3, 4, 5]);
   });
+
+  it("can parse comma separated numbers to number array", () => {
+    const input = "1,2,3,4,5";
+
+    const result = parseNumbers(input, ",");
+
+    expect(result).toEqual([1, 2, 3, 4, 5]);
+  });
 });
