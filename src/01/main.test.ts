@@ -50,10 +50,12 @@ describe("fuel counter upper", () => {
   });
 });
 
-describe("part one solver", () => {
-  expect(partOneSolver(input)).toEqual(3167282);
-});
+describe("solution", () => {
+  it("solves part one", () => {
+    expect(partOneSolver(input)).toEqual(3167282);
+  });
 
-describe("part two solver", () => {
-  expect(partTwoSolver(input)).toEqual(4748063);
+  it("solves part two", () => {
+    expect(partTwoSolver(input)).toEqual(4748063);
+  });
 });
