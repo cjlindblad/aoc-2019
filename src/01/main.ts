@@ -25,7 +25,7 @@ export const fuelCounterUpper = (
 ) => masses.reduce((prev, curr) => prev + fuelNeedCalculator(curr), 0);
 
 export const partOneSolver = (input: string) =>
-  fuelCounterUpper(parseNumbers(input), calculateFuelNeed);
+  fuelCounterUpper(parseNumbers(input, "\n"), calculateFuelNeed);
 
 export const partTwoSolver = (input: string) =>
-  fuelCounterUpper(parseNumbers(input), calculateRecursiveFuelNeed);
+  fuelCounterUpper(parseNumbers(input, "\n"), calculateRecursiveFuelNeed);

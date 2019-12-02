@@ -1,2 +1,4 @@
-export const parseNumbers = (input: string, separator: string = "\n") =>
+type Separator = "\n" | ",";
+
+export const parseNumbers = (input: string, separator: Separator) =>
   input.split(separator).map(line => Number(line));

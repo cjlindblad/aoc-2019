@@ -12,16 +12,16 @@ interface Operation {
 
 export class Computer {
   private memory: number[];
-  private programCounter: number;
+  private instructionPointer: number;
 
   public constructor(instructions: number[]) {
     this.memory = instructions;
-    this.programCounter = 0;
+    this.instructionPointer = 0;
   }
 
   public execute(): void {
     while (true) {
-      const opCode = this.memory[this.programCounter];
+      const opCode = this.memory[this.instructionPointer];
       let operation: Operation;
 
       switch (opCode) {
@@ -37,9 +37,9 @@ export class Computer {
           throw new Error(`Invalid opcode - ${opCode}`);
       }
 
-      const leftOperandPosition = this.memory[this.programCounter + 1];
-      const rightOperandPosition = this.memory[this.programCounter + 2];
-      const resultPosition = this.memory[this.programCounter + 3];
+      const leftOperandPosition = this.memory[this.instructionPointer + 1];
+      const rightOperandPosition = this.memory[this.instructionPointer + 2];
+      const resultPosition = this.memory[this.instructionPointer + 3];
 
       const leftOperand = this.memory[leftOperandPosition];
       const rightOperand = this.memory[rightOperandPosition];
@@ -48,7 +48,7 @@ export class Computer {
 
       this.memory[resultPosition] = result;
 
-      this.programCounter += 4;
+      this.instructionPointer += 4;
     }
   }
 

@@ -8,7 +8,7 @@ describe("input parsing", () => {
     4
     5`;
 
-    const result = parseNumbers(input);
+    const result = parseNumbers(input, "\n");
 
     expect(result).toEqual([1, 2, 3, 4, 5]);
   });
