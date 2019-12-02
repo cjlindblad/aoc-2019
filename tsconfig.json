@@ -7,10 +7,8 @@
     "allowSyntheticDefaultImports": true,
     "baseUrl": ".",
     "paths": {
-      "*": ["node_modules/"],
-      "typings/*": ["src/typings/*"]
+      "*": ["node_modules/"]
     }
   },
-  "include": ["src/**/*.ts"],
-  "exclude": ["src/test/**/*.spec.ts"]
+  "include": ["src/**/*.ts"]
 }
