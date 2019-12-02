@@ -1,4 +1,4 @@
-import { Computer, partOneSolver } from "./main";
+import { Computer, partOneSolver, partTwoSolver } from "./main";
 import input from "./input";
 
 describe("computer", () => {
@@ -45,4 +45,11 @@ describe("computer", () => {
 
 describe("part one solver", () => {
   expect(partOneSolver(input)).toEqual(4930687);
+});
+
+describe("part two solver", () => {
+  expect(partTwoSolver(input)).toEqual({
+    noun: 53,
+    verb: 35
+  });
 });
