@@ -1,4 +1,4 @@
-import Wire, { partOne } from "./main";
+import Wire, { partOne, partTwo } from "./main";
 import input from "./input";
 
 describe("wire", () => {
@@ -37,5 +37,9 @@ describe("wire", () => {
 describe("solutions", () => {
   it("solves part 1", () => {
     expect(partOne(input)).toEqual(399);
+  });
+
+  it("solves part 2", () => {
+    expect(partTwo(input)).toEqual(15678);
   });
 });

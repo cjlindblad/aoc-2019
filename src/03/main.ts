@@ -50,6 +50,10 @@ export default class Wire {
     return this.points.getIntersectionsWith(wire.points);
   }
 
+  public stepsTo(point: Point) {
+    return this.points.stepsTo(point);
+  }
+
   public toString() {
     return this.points.toString();
   }
@@ -67,7 +71,26 @@ export const partOne = (input: string) => {
 
   intersections.sort();
 
-  const closestPoint = intersections.points[0];
+  const closestIntersection = intersections.points[0];
 
-  return closestPoint.manhattanDistance();
+  return closestIntersection.manhattanDistance();
+};
+
+export const partTwo = (input: string) => {
+  const instructions = input.split("\n");
+  const instructionsA = instructions[0].split(",");
+  const instructionsB = instructions[1].split(",");
+
+  const wireA = new Wire(instructionsA);
+  const wireB = new Wire(instructionsB);
+
+  const intersections = wireA.getIntersectionsWith(wireB);
+
+  const shortestIntersectionDistance = intersections.points
+    .map(
+      intersection => wireA.stepsTo(intersection) + wireB.stepsTo(intersection)
+    )
+    .sort((a, b) => a - b)[0];
+
+  return shortestIntersectionDistance;
 };

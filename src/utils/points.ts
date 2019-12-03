@@ -25,6 +25,18 @@ export default class Points {
     return intersections;
   }
 
+  public stepsTo(point: Point) {
+    for (let i = 0; i < this.points.length; i++) {
+      const currentPoint = this.points[i];
+
+      if (currentPoint.x === point.x && currentPoint.y === point.y) {
+        return i + 1;
+      }
+    }
+
+    throw new Error(`Could not find point - ${point.toString()}`);
+  }
+
   public sort(sort?: typeof manhattanSort) {
     const manhattanSort = (a: Point, b: Point) => {
       return a.manhattanDistance() - b.manhattanDistance();
