@@ -52,17 +52,39 @@ export default class OrbitMap {
     return object;
   }
 
+  public getPathToCenter(from: SpaceObject) {
+    const names: string[] = [];
+    let currentObject = from;
+
+    while (currentObject.name !== "COM") {
+      names.push(currentObject.name);
+      currentObject = currentObject.innerObject;
+    }
+
+    return names;
+  }
+
   public solvePartOne() {
     let indirectOrbits = 0;
     this.objects.forEach(object => {
-      let currentObject = object;
-      while (currentObject.name !== "COM") {
-        indirectOrbits++;
-        currentObject = currentObject.innerObject;
-      }
+      const pathToCenter = this.getPathToCenter(object);
+      indirectOrbits += pathToCenter.length;
     });
 
     return indirectOrbits;
+  }
+
+  public solvePartTwo() {
+    const fromObject = this.objectsByName["YOU"].innerObject;
+    const toObject = this.objectsByName["SAN"].innerObject;
+
+    const fromPath = this.getPathToCenter(fromObject);
+    const toPath = this.getPathToCenter(toObject);
+
+    const uniqueFromPath = fromPath.filter(name => !toPath.includes(name));
+    const uniqueToPath = toPath.filter(name => !fromPath.includes(name));
+
+    return uniqueFromPath.length + uniqueToPath.length;
   }
 
   public toString() {

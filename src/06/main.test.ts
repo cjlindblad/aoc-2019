@@ -37,4 +37,32 @@ K)L`.split("\n");
 
     expect(map.solvePartOne()).toBe(139597);
   });
+
+  it("solves part two example input", () => {
+    const instructions = `COM)B
+B)C
+C)D
+D)E
+E)F
+B)G
+G)H
+D)I
+E)J
+J)K
+K)L
+K)YOU
+I)SAN`.split("\n");
+
+    const map = new OrbitMap(instructions);
+
+    expect(map.solvePartTwo()).toBe(4);
+  });
+
+  it("solves part two", () => {
+    const instructions = input.split("\n");
+
+    const map = new OrbitMap(instructions);
+
+    expect(map.solvePartTwo()).toBe(286);
+  });
 });
