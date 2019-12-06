@@ -40,4 +40,46 @@ describe("computer", () => {
 
     expect(result).toEqual([30, 1, 1, 4, 2, 5, 6, 0, 99]);
   });
+
+  it("calculates [1002, 4, 3, 4, 33]", () => {
+    const program = [1002, 4, 3, 4, 33];
+    const computer = new Computer(program);
+
+    computer.execute();
+    const result = computer.getMemoryDump();
+
+    expect(result).toEqual([1002, 4, 3, 4, 99]);
+  });
+
+  it("outputs 0 when input is zero", () => {
+    const program = [3, 12, 6, 12, 15, 1, 13, 14, 13, 4, 13, 99, -1, 0, 1, 9];
+    const computer = new Computer(program, 0);
+
+    computer.execute();
+
+    const output = computer.readOutput();
+
+    expect(output).toEqual([0]);
+  });
+
+  it("outputs 1 when input is non zero", () => {
+    const program = [3, 12, 6, 12, 15, 1, 13, 14, 13, 4, 13, 99, -1, 0, 1, 9];
+    const computer = new Computer(program, 1337);
+
+    computer.execute();
+
+    const output = computer.readOutput();
+
+    expect(output).toEqual([1]);
+  });
+
+  it("handles i/o", () => {
+    const program = [3, 0, 4, 0, 99];
+    const input = 1337;
+    const computer = new Computer(program, input);
+
+    computer.execute();
+
+    expect(computer.readOutput()).toEqual([1337]);
+  });
 });
