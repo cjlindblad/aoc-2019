@@ -1,11 +1,11 @@
 class SpaceObject {
   public readonly name: string;
-  public readonly innerObjects: SpaceObject[];
+  public innerObject?: SpaceObject;
   public readonly outerObjects: SpaceObject[];
 
   public constructor(name: string) {
     this.name = name;
-    this.innerObjects = [];
+    this.innerObject = null;
     this.outerObjects = [];
   }
 
@@ -22,12 +22,21 @@ export default class OrbitMap {
     this.objects = [];
     this.objectsByName = {};
 
+    this.createObjects(instructions);
+  }
+
+  private createObjects(instructions: string[]) {
     instructions.forEach(instruction => {
       const [innerObjectName, outerObjectName] = instruction.split(")");
       const innerObject = this.getOrCreateObjectByName(innerObjectName);
       const outerObject = this.getOrCreateObjectByName(outerObjectName);
-      outerObject.innerObjects.push(innerObject);
       innerObject.outerObjects.push(outerObject);
+      if (outerObject.innerObject) {
+        throw new Error(
+          `Tried to add ${innerObject.name} to ${outerObject.name}, but it already contained ${outerObject.innerObject.name}`
+        );
+      }
+      outerObject.innerObject = innerObject;
     });
   }
 
@@ -43,36 +52,13 @@ export default class OrbitMap {
     return object;
   }
 
-  public hasObjectsWithMultipleChildren() {
-    for (const object of this.objects) {
-      if (object.innerObjects.length > 1) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  public hasObjectsWithMultipleParents() {
-    for (const object of this.objects) {
-      if (object.outerObjects.length > 1) {
-        return true;
-      }
-    }
-    return false;
-  }
-
   public solvePartOne() {
     let indirectOrbits = 0;
     this.objects.forEach(object => {
       let currentObject = object;
       while (currentObject.name !== "COM") {
         indirectOrbits++;
-        if (currentObject.innerObjects.length > 1) {
-          throw new Error(
-            `Unexpected number of inner objects for object ${currentObject.name} - ${currentObject.innerObjects.length}`
-          );
-        }
-        currentObject = currentObject.innerObjects[0];
+        currentObject = currentObject.innerObject;
       }
     });
 
