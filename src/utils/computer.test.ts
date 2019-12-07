@@ -53,7 +53,7 @@ describe("computer", () => {
 
   it("outputs 0 when input is zero", () => {
     const program = [3, 12, 6, 12, 15, 1, 13, 14, 13, 4, 13, 99, -1, 0, 1, 9];
-    const computer = new Computer(program, 0);
+    const computer = new Computer(program, [0]);
 
     computer.execute();
 
@@ -64,7 +64,7 @@ describe("computer", () => {
 
   it("outputs 1 when input is non zero", () => {
     const program = [3, 12, 6, 12, 15, 1, 13, 14, 13, 4, 13, 99, -1, 0, 1, 9];
-    const computer = new Computer(program, 1337);
+    const computer = new Computer(program, [1337]);
 
     computer.execute();
 
@@ -76,7 +76,7 @@ describe("computer", () => {
   it("handles i/o", () => {
     const program = [3, 0, 4, 0, 99];
     const input = 1337;
-    const computer = new Computer(program, input);
+    const computer = new Computer(program, [input]);
 
     computer.execute();
 

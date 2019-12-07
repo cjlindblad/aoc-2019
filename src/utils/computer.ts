@@ -47,10 +47,10 @@ const parametersByOpCode = {
 export default class Computer {
   private memory: number[];
   private instructionPointer: number;
-  private input?: number;
+  private input: number[];
   private output: number[];
 
-  public constructor(instructions: number[], input?: number) {
+  public constructor(instructions: number[], input: number[] = []) {
     this.memory = instructions;
     this.instructionPointer = 0;
     this.input = input;
@@ -121,7 +121,7 @@ export default class Computer {
           autoIncreaseInstructionPointer();
           break;
         case OpCode.ReadInput:
-          this.memory[parameterValues[0]] = this.input;
+          this.memory[parameterValues[0]] = this.readNextInput();
           autoIncreaseInstructionPointer();
           break;
         case OpCode.WriteOutput:
@@ -162,6 +162,10 @@ export default class Computer {
         );
       }
     }
+  }
+
+  private readNextInput() {
+    return this.input.shift();
   }
 
   public getMemoryDump() {
