@@ -1,5 +1,5 @@
 import input from "./input";
-import Image, { partOne } from "./main";
+import Image, { partOne, partTwo } from "./main";
 
 describe("image", () => {
   it("creates two layers from example input", () => {
@@ -12,6 +12,10 @@ describe("image", () => {
 
 describe("solution", () => {
   it("solves part one", () => {
-    expect(partOne(input)).toBe(-1);
+    expect(partOne(input)).toBe(1596);
+  });
+
+  it("solves part two", () => {
+    expect(partTwo(input)).toBe("");
   });
 });
