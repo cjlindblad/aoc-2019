@@ -27,10 +27,11 @@ export const solver = (instructions: number[], phaseSettings: number[]) => {
     }
 
     amplifiers.forEach((amplifier, index) => {
-      amplifier.setInput(
-        memoryBuffers[(index + amplifierCount - 1) % amplifierCount]
-      );
-      amplifier.setOutput(memoryBuffers[(index + 1) % amplifierCount]);
+      const bufferFromPrevious =
+        memoryBuffers[(index + amplifierCount - 1) % amplifierCount];
+      const bufferToNext = memoryBuffers[(index + 1) % amplifierCount];
+      amplifier.setInput(bufferFromPrevious);
+      amplifier.setOutput(bufferToNext);
     });
 
     const lastAmplifier = amplifiers[amplifierCount - 1];
