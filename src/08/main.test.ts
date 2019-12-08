@@ -16,6 +16,12 @@ describe("solution", () => {
   });
 
   it("solves part two", () => {
-    expect(partTwo(input)).toBe("");
+    expect(partTwo(input)).toBe(`x    xxx  xxx   xx  xxxx 
+x    x  x x  x x  x x    
+x    xxx  x  x x    xxx  
+x    x  x xxx  x    x    
+x    x  x x x  x  x x    
+xxxx xxx  x  x  xx  xxxx 
+`);
   });
 });
