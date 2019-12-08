@@ -2,50 +2,49 @@ import Computer from "../utils/computer";
 import { generatePermutations } from "../utils/permutations";
 
 export const solver = (instructions: number[], phaseSettings: number[]) => {
+  const INITIAL_SIGNAL = 0;
+
   const phaseSettingPermutations = generatePermutations(phaseSettings);
 
   let maxOutput = Number.MIN_SAFE_INTEGER;
 
   phaseSettingPermutations.forEach(permutation => {
-    const ampA = new Computer([...instructions]);
-    const ampB = new Computer([...instructions]);
-    const ampC = new Computer([...instructions]);
-    const ampD = new Computer([...instructions]);
-    const ampE = new Computer([...instructions]);
+    const amplifiers: Computer[] = [];
+    const memoryBuffers: number[][] = [];
 
-    const eaBuffer = [permutation[0], 0];
-    const abBuffer = [permutation[1]];
-    const bcBuffer = [permutation[2]];
-    const cdBuffer = [permutation[3]];
-    const deBuffer = [permutation[4]];
+    const amplifierCount = phaseSettings.length;
 
-    ampA.setInput(eaBuffer);
-    ampA.setOutput(abBuffer);
+    for (let i = 0; i < amplifierCount; i++) {
+      const amplifier = new Computer([...instructions]);
+      const buffer = [permutation[i]];
 
-    ampB.setInput(abBuffer);
-    ampB.setOutput(bcBuffer);
+      if (i === 0) {
+        buffer.push(INITIAL_SIGNAL);
+      }
 
-    ampC.setInput(bcBuffer);
-    ampC.setOutput(cdBuffer);
-
-    ampD.setInput(cdBuffer);
-    ampD.setOutput(deBuffer);
-
-    ampE.setInput(deBuffer);
-    ampE.setOutput(eaBuffer);
-
-    while (!ampE.didReachHalt()) {
-      ampA.execute();
-      ampB.execute();
-      ampC.execute();
-      ampD.execute();
-      ampE.execute();
+      memoryBuffers.push(buffer);
+      amplifiers.push(amplifier);
     }
 
-    const outputE = ampE.readOutput()[0];
+    amplifiers.forEach((amplifier, index) => {
+      amplifier.setInput(
+        memoryBuffers[(index + amplifierCount - 1) % amplifierCount]
+      );
+      amplifier.setOutput(memoryBuffers[(index + 1) % amplifierCount]);
+    });
 
-    if (outputE > maxOutput) {
-      maxOutput = outputE;
+    const lastAmplifier = amplifiers[amplifierCount - 1];
+
+    while (!lastAmplifier.didReachHalt()) {
+      amplifiers.forEach(amplifier => {
+        amplifier.execute();
+      });
+    }
+
+    const lastOutput = lastAmplifier.readOutput()[0];
+
+    if (lastOutput > maxOutput) {
+      maxOutput = lastOutput;
     }
   });
 
