@@ -1,5 +1,5 @@
 import input from "./input";
-import { partOne } from "./main";
+import { solver } from "./main";
 
 describe("solution", () => {
   it("solves first given test case for part one", () => {
@@ -7,7 +7,7 @@ describe("solution", () => {
       .split(",")
       .map(e => Number(e));
 
-    expect(partOne(program)).toEqual(43210);
+    expect(solver(program, [0, 1, 2, 3, 4])).toEqual(43210);
   });
 
   it("solves second given test case for part one", () => {
@@ -15,7 +15,7 @@ describe("solution", () => {
       .split(",")
       .map(e => Number(e));
 
-    expect(partOne(program)).toEqual(54321);
+    expect(solver(program, [0, 1, 2, 3, 4])).toEqual(54321);
   });
 
   it("solves third given test case for part one", () => {
@@ -23,12 +23,26 @@ describe("solution", () => {
       .split(",")
       .map(e => Number(e));
 
-    expect(partOne(program)).toEqual(65210);
+    expect(solver(program, [0, 1, 2, 3, 4])).toEqual(65210);
   });
 
   it("solves part one", () => {
     const program = input.split(",").map(e => Number(e));
 
-    expect(partOne(program)).toEqual(118936);
+    expect(solver(program, [0, 1, 2, 3, 4])).toEqual(118936);
+  });
+
+  it("solves first given test case for part two", () => {
+    const program = "3,26,1001,26,-4,26,3,27,1002,27,2,27,1,27,26,27,4,27,1001,28,-1,28,1005,28,6,99,0,0,5"
+      .split(",")
+      .map(e => Number(e));
+
+    expect(solver(program, [5, 6, 7, 8, 9])).toEqual(139629729);
+  });
+
+  it("solves part two", () => {
+    const program = input.split(",").map(e => Number(e));
+
+    expect(solver(program, [5, 6, 7, 8, 9])).toEqual(57660948);
   });
 });

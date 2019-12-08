@@ -49,16 +49,22 @@ export default class Computer {
   private instructionPointer: number;
   private input: number[];
   private output: number[];
+  private haltReached: boolean;
 
-  public constructor(instructions: number[], input: number[] = []) {
+  public constructor(instructions: number[]) {
     this.memory = instructions;
     this.instructionPointer = 0;
-    this.input = input;
+    this.input = [];
     this.output = [];
+    this.haltReached = false;
   }
 
   private getCurrentInstruction() {
     return this.memory[this.instructionPointer];
+  }
+
+  private getCurrentOpCode() {
+    return this.getCurrentInstruction() % 100;
   }
 
   private parseParameterModes(numberOfParameters: number) {
@@ -82,13 +88,7 @@ export default class Computer {
 
   public execute(): void {
     while (true) {
-      const instruction = this.getCurrentInstruction();
-
-      if (instruction === OpCode.Halt) {
-        return;
-      }
-
-      const opCode = instruction % 100;
+      const opCode = this.getCurrentOpCode();
       const parameters = parametersByOpCode[opCode];
       const numberOfParameters = parameters.length;
 
@@ -121,6 +121,11 @@ export default class Computer {
           autoIncreaseInstructionPointer();
           break;
         case OpCode.ReadInput:
+          if (!this.hasMoreInput()) {
+            // we exit without setting halt flag
+            return;
+          }
+
           this.memory[parameterValues[0]] = this.readNextInput();
           autoIncreaseInstructionPointer();
           break;
@@ -152,8 +157,11 @@ export default class Computer {
             parameterValues[0] === parameterValues[1] ? 1 : 0;
           autoIncreaseInstructionPointer();
           break;
+        case OpCode.Halt:
+          this.haltReached = true;
+          return;
         default:
-          throw new Error(`Invalid opcode - ${instruction}`);
+          throw new Error(`Invalid opcode - ${opCode}`);
       }
 
       if (this.instructionPointer >= this.memory.length) {
@@ -164,8 +172,24 @@ export default class Computer {
     }
   }
 
+  private hasMoreInput() {
+    return this.input.length > 0;
+  }
+
   private readNextInput() {
     return this.input.shift();
+  }
+
+  public setInput(input: number[]) {
+    this.input = input;
+  }
+
+  public setOutput(output: number[]) {
+    this.output = output;
+  }
+
+  public didReachHalt() {
+    return this.haltReached;
   }
 
   public getMemoryDump() {

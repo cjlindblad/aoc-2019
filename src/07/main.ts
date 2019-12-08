@@ -1,35 +1,51 @@
 import Computer from "../utils/computer";
 import { generatePermutations } from "../utils/permutations";
 
-export const partOne = (instructions: number[]) => {
-  const phaseSettings = [0, 1, 2, 3, 4];
+export const solver = (instructions: number[], phaseSettings: number[]) => {
   const phaseSettingPermutations = generatePermutations(phaseSettings);
 
   let maxOutput = Number.MIN_SAFE_INTEGER;
 
   phaseSettingPermutations.forEach(permutation => {
-    const amplifierA = new Computer(instructions, [permutation[0], 0]);
-    amplifierA.execute();
-    const outputA = amplifierA.readOutput();
+    const ampA = new Computer([...instructions]);
+    const ampB = new Computer([...instructions]);
+    const ampC = new Computer([...instructions]);
+    const ampD = new Computer([...instructions]);
+    const ampE = new Computer([...instructions]);
 
-    const amplifierB = new Computer(instructions, [permutation[1], outputA[0]]);
-    amplifierB.execute();
-    const outputB = amplifierB.readOutput();
+    const eaBuffer = [permutation[0], 0];
+    const abBuffer = [permutation[1]];
+    const bcBuffer = [permutation[2]];
+    const cdBuffer = [permutation[3]];
+    const deBuffer = [permutation[4]];
 
-    const amplifierC = new Computer(instructions, [permutation[2], outputB[0]]);
-    amplifierC.execute();
-    const outputC = amplifierC.readOutput();
+    ampA.setInput(eaBuffer);
+    ampA.setOutput(abBuffer);
 
-    const amplifierD = new Computer(instructions, [permutation[3], outputC[0]]);
-    amplifierD.execute();
-    const outputD = amplifierD.readOutput();
+    ampB.setInput(abBuffer);
+    ampB.setOutput(bcBuffer);
 
-    const amplifierE = new Computer(instructions, [permutation[4], outputD[0]]);
-    amplifierE.execute();
-    const outputE = amplifierE.readOutput();
+    ampC.setInput(bcBuffer);
+    ampC.setOutput(cdBuffer);
 
-    if (outputE[0] > maxOutput) {
-      maxOutput = outputE[0];
+    ampD.setInput(cdBuffer);
+    ampD.setOutput(deBuffer);
+
+    ampE.setInput(deBuffer);
+    ampE.setOutput(eaBuffer);
+
+    while (!ampE.didReachHalt()) {
+      ampA.execute();
+      ampB.execute();
+      ampC.execute();
+      ampD.execute();
+      ampE.execute();
+    }
+
+    const outputE = ampE.readOutput()[0];
+
+    if (outputE > maxOutput) {
+      maxOutput = outputE;
     }
   });
 
