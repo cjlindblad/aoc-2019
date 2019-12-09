@@ -7,12 +7,14 @@ enum OpCode {
   JumpIfFalse = 6,
   LessThan = 7,
   Equals = 8,
+  AdjustRelativeBase = 9,
   Halt = 99
 }
 
 enum ParameterMode {
   Positional = 0,
-  Immediate = 1
+  Immediate = 1,
+  Relative = 2
 }
 
 enum ParameterType {
@@ -41,6 +43,7 @@ const parametersByOpCode = {
     ParameterType.Read,
     ParameterType.Write
   ],
+  [OpCode.AdjustRelativeBase]: [ParameterType.Read],
   [OpCode.Halt]: []
 };
 
@@ -50,6 +53,7 @@ export default class Computer {
   private input: number[];
   private output: number[];
   private haltReached: boolean;
+  private relativeBase: number;
 
   public constructor(instructions: number[]) {
     this.memory = instructions;
@@ -57,6 +61,7 @@ export default class Computer {
     this.input = [];
     this.output = [];
     this.haltReached = false;
+    this.relativeBase = 0;
   }
 
   private getCurrentInstruction() {
@@ -96,13 +101,21 @@ export default class Computer {
 
       const parameterValues = parameters.map((parameter, i) => {
         const pointer = this.instructionPointer + i + 1;
-        if (
-          parameter === ParameterType.Read &&
-          parameterModes[i] === ParameterMode.Positional
-        ) {
-          return this.memory[this.memory[pointer]];
+        const parameterMode = parameterModes[i];
+
+        let argument = this.memory[pointer];
+        if (parameterMode === ParameterMode.Relative) {
+          argument += this.relativeBase;
         }
-        return this.memory[pointer];
+
+        if (
+          parameterMode !== ParameterMode.Immediate &&
+          parameter === ParameterType.Read
+        ) {
+          return this.memory[argument] || 0;
+        }
+
+        return argument;
       });
 
       const autoIncreaseInstructionPointer = () => {
@@ -155,6 +168,10 @@ export default class Computer {
         case OpCode.Equals:
           this.memory[parameterValues[2]] =
             parameterValues[0] === parameterValues[1] ? 1 : 0;
+          autoIncreaseInstructionPointer();
+          break;
+        case OpCode.AdjustRelativeBase:
+          this.relativeBase += parameterValues[0];
           autoIncreaseInstructionPointer();
           break;
         case OpCode.Halt:
