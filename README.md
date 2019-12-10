@@ -16,4 +16,4 @@ This year I'm focusing on readable code driven by tests. And on not breaking par
 | 07 | ** |
 | 08 | ** |
 | 09 | ** |
-| 10 |    |
+| 10 | ** |
