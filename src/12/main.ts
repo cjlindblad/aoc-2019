@@ -67,9 +67,6 @@ export const partOne = (input: number[][], steps: number) => {
   );
 
   for (let i = 0; i < steps; i++) {
-    if (i <= 10) {
-      console.log(`${i}:\n${moons.map(moon => moon.toString()).join("\n")}`);
-    }
     for (
       let firstMoonIndex = 0;
       firstMoonIndex < moons.length;
@@ -100,4 +97,50 @@ export const partOne = (input: number[][], steps: number) => {
   );
 
   return totalEnergy;
+};
+
+export const partTwo = (input: number[][]) => {
+  const moons: Moon[] = input.map(
+    line => new Moon({ x: line[0], y: line[1], z: line[2] })
+  );
+
+  const existingPositions: { [key: string]: boolean } = {};
+
+  let iterations = 0;
+
+  while (true && iterations < 4686774924) {
+    for (
+      let firstMoonIndex = 0;
+      firstMoonIndex < moons.length;
+      firstMoonIndex++
+    ) {
+      for (
+        let secondMoonIndex = firstMoonIndex + 1;
+        secondMoonIndex < moons.length;
+        secondMoonIndex++
+      ) {
+        const firstMoon = moons[firstMoonIndex];
+        const secondMoon = moons[secondMoonIndex];
+
+        firstMoon.applyGravityFrom(secondMoon);
+        secondMoon.applyGravityFrom(firstMoon);
+      }
+    }
+
+    moons.forEach(moon => {
+      moon.move();
+    });
+
+    const position = moons.map(moon => moon.toString()).join(",");
+
+    if (existingPositions[position]) {
+      break;
+    }
+
+    existingPositions[position] = true;
+
+    iterations++;
+  }
+
+  return iterations;
 };
